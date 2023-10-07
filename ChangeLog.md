@@ -1,4 +1,6 @@
 ### 5.1.2 (TBD)
+* **Breaking change**: Configuration of `MaxClientsAllowed` must now be done via the `configure` parameter of `IDicomServerFactory.Create(..)` instead of using the `Options` property of a `DicomServer`.
+* **Breaking change**: `IServiceCollection.AddDicomServer(Action<DicomServiceOptions> configure)` was changed to `IServiceCollection.AddDicomServer(Action<DicomServerOptions> configure)`  
 * fo-dicom.Imaging.Desktop supports net6.0-windows and net7.0-windows targets (#1318)
 * FO-DICOM.Tests target net6.0-windows and net7.0-windows and test WPF/WinForms images.
 * Added private tags mentioned in RayStation 11A DICOM Conformance Statement (#1612)
@@ -10,6 +12,12 @@
 * Add the possibility to configure TCP buffer sizes (#1564)
 * Fix incorrect values returned from `DicomEncoding.GetCharset()` (#1624)
 * Tolerate `Specific Character Set` values misspelled as "ISO-IR ###" additionally to "ISO IR ###"
+* Fix issue where reading a DICOM file with large pixel data (> 2 GB) did not work (#1453)
+* Fix issue where a DICOM server could stop accepting incoming connections if MaxClientsAllowed is configured and one or more connections never close (#1468)
+* Fix issue where a DICOM server could leak memory when one or more connections never close (#1594)
+* Fix the issue of 'DicomAttribute not generated in XML when element is of type DicomFragmentSequence'
+* Prevent adding duplicate presentation contexts to an association request (#1596)
+* Fix issue with missing known DicomTransferSyntax from static DicomTransferSyntax.Entries dictionary (#1644)
 
 #### 5.1.1 (2023-05-29)
 * Fix issue where DicomClient did not send requests when Async Ops Invoked was zero (#1597)
@@ -192,5 +200,3 @@
 * DicomStringElement and derived classes do not have the "encoding" parameter in constructor, that takes a string-value
 * DicomDataset.Add(OrUpdate) does not take an "encoding" parameter any more, instead the DicomDataset has a property `TextEncodings`, that is applied to all string-based tags.
 * in update to DICOM2020e the keywords, that are provided by Nema, are used. therefore some DicomUID-Names changed.
-
-
